@@ -111,6 +111,13 @@ window.addEventListener('DOMContentLoaded', () => {
     container: '.page'
   });
   slider.render();
+  const modelePageSlider = new _modules_slider_slider_main__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    container: '.moduleapp',
+    btns: '.next',
+    prev: '.prevmodule',
+    next: '.nextmodule'
+  });
+  modelePageSlider.render();
   const showUpSlider = new _modules_slider_slider_mini__WEBPACK_IMPORTED_MODULE_1__["default"]({
     container: '.showup__content-slider',
     prev: '.showup__prev',
@@ -155,21 +162,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Difference; });
 class Difference {
   constructor(oldOfficerr, newOfficer, items) {
-    this.oldOfficer = document.querySelector(oldOfficerr);
-    this.newOfficer = document.querySelector(newOfficer);
-    this.oldItems = this.oldOfficer.querySelectorAll(items);
-    this.newItems = this.newOfficer.querySelectorAll(items);
-    this.oldCounter = 0;
-    this.newCounter = 0;
-  } // itemsAnimation(items) {
-  //     items.forEach((item, i, arr) => {
-  //         item.classList.add('animeted', 'slideInUp');
-  //         if (i !== arr.length - 1) {
-  //             item.style.opacity = '0';
-  //         }
-  //     });
-  // }
-
+    try {
+      this.oldOfficer = document.querySelector(oldOfficerr);
+      this.newOfficer = document.querySelector(newOfficer);
+      this.oldItems = this.oldOfficer.querySelectorAll(items);
+      this.newItems = this.newOfficer.querySelectorAll(items);
+      this.oldCounter = 0;
+      this.newCounter = 0;
+    } catch (e) {}
+  }
 
   bindTriggers(container, counter, items) {
     container.querySelector('.plus').addEventListener('click', () => {
@@ -192,10 +193,12 @@ class Difference {
   }
 
   init() {
-    this.hideItems(this.oldItems);
-    this.hideItems(this.newItems);
-    this.bindTriggers(this.newOfficer, this.newCounter, this.newItems);
-    this.bindTriggers(this.oldOfficer, this.oldCounter, this.oldItems);
+    try {
+      this.hideItems(this.oldItems);
+      this.hideItems(this.newItems);
+      this.bindTriggers(this.newOfficer, this.newCounter, this.newItems);
+      this.bindTriggers(this.oldOfficer, this.oldCounter, this.oldItems);
+    } catch (e) {}
   }
 
 }
@@ -408,8 +411,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider */ "./src/js/modules/slider/slider.js");
 
 class MainSlider extends _slider__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(btns) {
-    super(btns);
+  constructor(btns, next, prev) {
+    super(btns, next, prev);
   }
 
   showSlides(n) {
@@ -438,18 +441,29 @@ class MainSlider extends _slider__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.slides.forEach(slide => {
       slide.style.display = 'none';
     });
-    this.slides[this.slideIndex - 1].style.display = 'block';
+
+    try {
+      this.slides[this.slideIndex - 1].style.display = 'block';
+    } catch (e) {}
   }
 
   plusSlides(n) {
     this.showSlides(this.slideIndex += n);
   }
 
-  render() {
+  triggersSlideChange(trigger, direction) {
     try {
-      this.hanson = document.querySelector('.hanson');
+      trigger.forEach(item => {
+        item.addEventListener('click', e => {
+          e.stopPropagation();
+          e.preventDefault();
+          this.plusSlides(direction);
+        });
+      });
     } catch (e) {}
+  }
 
+  bindTriggers() {
     this.btns.forEach(item => {
       item.addEventListener('click', () => {
         this.plusSlides(1);
@@ -460,7 +474,19 @@ class MainSlider extends _slider__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.showSlides(this.slideIndex);
       });
     });
-    this.showSlides(this.slideIndex);
+    this.triggersSlideChange(this.prev, -1);
+    this.triggersSlideChange(this.next, 1);
+  }
+
+  render() {
+    if (this.container) {
+      try {
+        this.hanson = document.querySelector('.hanson');
+      } catch (e) {}
+
+      this.showSlides(this.slideIndex);
+      this.bindTriggers();
+    }
   }
 
 }
@@ -521,33 +547,39 @@ class MiniSlider extends _slider__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }
 
   bindTriggers() {
-    this.next.addEventListener('click', () => this.nextSlide());
-    this.prev.addEventListener('click', () => {
-      if (this.index == 0) {
-        this.container.prepend(this.slides[this.slides.length - 1]);
-        this.index = this.slides.length - 1;
-      } else {
-        this.container.prepend(this.slides[this.index - 1]);
-        this.index--;
-      }
+    this.next.forEach(item => {
+      item.addEventListener('click', () => this.nextSlide());
+    });
+    this.prev.forEach(item => {
+      item.addEventListener('click', () => {
+        if (this.index == 0) {
+          this.container.prepend(this.slides[this.slides.length - 1]);
+          this.index = this.slides.length - 1;
+        } else {
+          this.container.prepend(this.slides[this.index - 1]);
+          this.index--;
+        }
 
-      this.decorizeSlides();
+        this.decorizeSlides();
+      });
     });
   }
 
   init() {
-    this.container.style.cssText = `
+    try {
+      this.container.style.cssText = `
             display: flex;
             flex-wrap: wrap;
             overflow: hidden;
             align-items: flex-start;
-        `;
-    this.bindTriggers();
-    this.decorizeSlides();
+            `;
+      this.bindTriggers();
+      this.decorizeSlides();
 
-    if (this.autoplay) {
-      setInterval(() => this.nextSlide(), 5000);
-    }
+      if (this.autoplay) {
+        setInterval(() => this.nextSlide(), 5000);
+      }
+    } catch (e) {}
   }
 
 }
@@ -577,20 +609,22 @@ class Slider {
     this.container = document.querySelector(container);
     this.slides = [];
     this.btns = document.querySelectorAll(btns);
-    this.prev = document.querySelector(prev);
-    this.next = document.querySelector(next);
+    this.prev = document.querySelectorAll(prev);
+    this.next = document.querySelectorAll(next);
     this.activeClass = activeClass;
     this.animate = animate;
     this.autoplay = autoplay;
     this.slideIndex = 1;
 
-    for (let i = 0; i < this.container.children.length; i++) {
-      if (this.container.children[i].tagName == "BUTTON") {
-        continue;
-      } else {
-        this.slides.push(this.container.children[i]);
+    try {
+      for (let i = 0; i < this.container.children.length; i++) {
+        if (this.container.children[i].tagName == "BUTTON") {
+          continue;
+        } else {
+          this.slides.push(this.container.children[i]);
+        }
       }
-    }
+    } catch (e) {}
   }
 
 }

@@ -1,21 +1,14 @@
 export default class Difference {
     constructor(oldOfficerr, newOfficer, items) {
-        this.oldOfficer = document.querySelector(oldOfficerr);
-        this.newOfficer =document.querySelector(newOfficer);
-        this.oldItems = this.oldOfficer.querySelectorAll(items);
-        this.newItems = this.newOfficer.querySelectorAll(items);
-        this.oldCounter = 0;
-        this.newCounter = 0;
+        try {
+            this.oldOfficer = document.querySelector(oldOfficerr);
+            this.newOfficer =document.querySelector(newOfficer);
+            this.oldItems = this.oldOfficer.querySelectorAll(items);
+            this.newItems = this.newOfficer.querySelectorAll(items);
+            this.oldCounter = 0;
+            this.newCounter = 0;
+        } catch(e){}
     }
-
-    // itemsAnimation(items) {
-    //     items.forEach((item, i, arr) => {
-    //         item.classList.add('animeted', 'slideInUp');
-    //         if (i !== arr.length - 1) {
-    //             item.style.opacity = '0';
-    //         }
-    //     });
-    // }
     
     bindTriggers(container, counter, items ) {
         container.querySelector('.plus').addEventListener('click', () => {
@@ -29,7 +22,6 @@ export default class Difference {
         });
     }
     
-
     hideItems(items) {
         items.forEach((item, i, arr) => {
             if (i !== arr.length - 1) {
@@ -39,9 +31,11 @@ export default class Difference {
     }
 
     init() {
-        this.hideItems(this.oldItems);
-        this.hideItems(this.newItems);
-        this.bindTriggers(this.newOfficer, this.newCounter, this.newItems);
-        this.bindTriggers(this.oldOfficer, this.oldCounter, this.oldItems);
+        try {
+            this.hideItems(this.oldItems);
+            this.hideItems(this.newItems);
+            this.bindTriggers(this.newOfficer, this.newCounter, this.newItems);
+            this.bindTriggers(this.oldOfficer, this.oldCounter, this.oldItems);
+        } catch(e){}
     }
 }
